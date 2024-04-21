@@ -25,8 +25,8 @@ class ProductoController extends AbstractController
         ]);
     }
 
-    #[Route("/productos/{slug}", methods: ["GET"])]
-    public function getProducto(string $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
+    #[Route("/productos/buscar/{slug}", methods: ["GET"])]
+    public function searchProducto(string $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
         $producto = $productoRepository->searchProduct($slug);
 
@@ -35,6 +35,19 @@ class ProductoController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
+
+
+    #[Route("/producto/{slug}", methods: ["GET"])]
+    public function getProducto(string $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
+    {
+        $producto = $productoRepository->findByNombre($slug);
+
+        $productoJson = $serializer->serialize($producto, 'json');
+        return new Response($productoJson, Response::HTTP_OK, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
 
     #[Route("/productos/categoria/{idCategoria<\d>}", methods: ["GET"])]
     public function getProductoByCategoria(int $idCategoria, ProductoRepository $productoRepository, SerializerInterface $serializer)

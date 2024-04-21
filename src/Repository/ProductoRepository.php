@@ -47,6 +47,11 @@ class ProductoRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')->andWhere('p.nombre LIKE :nombre')->setParameter('nombre', '%' . $nombre . '%')->getQuery()->getResult();
     }
 
+    public function findByNombre(string $nombre)
+    {
+        return $this->createQueryBuilder('p')->andWhere('p.nombre = :nombre')->setParameter('nombre', $nombre)->getQuery()->getOneOrNullResult();
+    }
+
     public function findByCategoria(int $idCategoria)
     {
         return $this->createQueryBuilder('p')->andWhere('p.categoria = :idCategoria')->setParameter('idCategoria', $idCategoria)->getQuery()->getResult();

@@ -14,10 +14,21 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ResenhaController extends AbstractController
 {
-    #[Route("/resenhas/{idProducto}", methods: ["GET"])]
-    public function getResenhasProducto(string $idProducto, ResenhaRepository $resenhaRepository, SerializerInterface $serializer)
+    #[Route("/resenhas/{idProducto<\d>}", methods: ["GET"])]
+    public function getResenhasProducto(int $idProducto, ResenhaRepository $resenhaRepository, SerializerInterface $serializer)
     {
         $resenhas = $resenhaRepository->findByProducto($idProducto);
+        $resenhasJson = $serializer->serialize($resenhas, 'json');
+        return new Response($resenhasJson, Response::HTTP_OK, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
+    #[Route("/resenhas/{nomProducto}", methods: ["GET"])]
+    public function getResenhasNomProducto(string $nomProducto, ResenhaRepository $resenhaRepository, ProductoRepository $productoRepository, SerializerInterface $serializer)
+    {
+        $producto = $productoRepository->findByNombre($nomProducto);
+        $resenhas = $resenhaRepository->findByProducto($producto->getId());
         $resenhasJson = $serializer->serialize($resenhas, 'json');
         return new Response($resenhasJson, Response::HTTP_OK, [
             'Content-Type' => 'application/json'

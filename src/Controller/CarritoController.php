@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class CarritoController extends AbstractController
 {
-    #[Route("/carrito/usuario/{idUsuario}", methods: ["GET"])]
+    #[Route("/carrito/usuario/{idUsuario<\d+>}", methods: ["GET"])]
     public function getCarritoUsuario(int $idUsuario, ProductoscarritoRepository $productoscarritoRepository, SerializerInterface $serializer, CarritoRepository $carritoRepository)
     {
 
@@ -29,7 +29,7 @@ class CarritoController extends AbstractController
     }
 
 
-    #[Route("/productocarrito/crear/{idCarrito}/{idProducto}", methods: ["PUT", "PATCH"])]
+    #[Route("/productocarrito/crear/{idCarrito<\d+>}/{idProducto<\d+>}", methods: ["PUT", "PATCH"])]
     public function addProductoPedido(int $idCarrito, int $idProducto, CarritoRepository $carritoRepository, ProductoRepository $productoRepository, ProductoscarritoRepository $productoscarritoRepository, Request $request)
     {
 

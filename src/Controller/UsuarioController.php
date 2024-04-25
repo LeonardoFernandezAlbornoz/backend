@@ -27,7 +27,7 @@ class UsuarioController extends AbstractController
         ]);
     }
 
-    #[Route("/usuario/{id}", methods: ["GET"])]
+    #[Route("/usuario/{id<\d+>}", methods: ["GET"])]
     public function getUsuario(int $id, UsuarioRepository $usuarioRepository, SerializerInterface $serializer)
     {
         $usuario = $usuarioRepository->find($id);
@@ -70,7 +70,7 @@ class UsuarioController extends AbstractController
         return new JsonResponse(["status" => "Usuario añadido correctamente"], Response::HTTP_OK);
     }
 
-    #[Route("/usuario/eliminar/{id}", methods: ["DELETE"])]
+    #[Route("/usuario/eliminar/{id<\d+>}", methods: ["DELETE"])]
     public function removeUsuario(int $id, UsuarioRepository $usuarioRepository)
     {
         $usuario = $usuarioRepository->find($id);
@@ -79,7 +79,7 @@ class UsuarioController extends AbstractController
         return new JsonResponse(["status" => "Usuario " . $id . " eliminado correctamente"], Response::HTTP_OK);
     }
 
-    #[Route("/usuario/modificar/{id}", methods: ["PATCH", "PUT"])]
+    #[Route("/usuario/modificar/{id<\d+>}", methods: ["PATCH", "PUT"])]
     public function updateUsuario(int $id, Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher)
     {
         $data = json_decode($request->getContent(), true);

@@ -25,7 +25,7 @@ class ProductoController extends AbstractController
         ]);
     }
 
-    #[Route("/productos/buscar/{slug}", methods: ["GET"])]
+    #[Route("/productos/buscar/{slug<[A-Za-zÁÉÍÓÚáéíóú\süÜ]+>}", methods: ["GET"])]
     public function searchProducto(string $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
         $producto = $productoRepository->searchProduct($slug);
@@ -49,7 +49,7 @@ class ProductoController extends AbstractController
     }
 
 
-    #[Route("/productos/categoria/{idCategoria<\d>}", methods: ["GET"])]
+    #[Route("/productos/categoria/{idCategoria<\d+>}", methods: ["GET"])]
     public function getProductoByCategoria(int $idCategoria, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
         $productos = $productoRepository->findByCategoria($idCategoria);
@@ -61,7 +61,7 @@ class ProductoController extends AbstractController
     }
 
 
-    #[Route("/productos/categoria/{nomCategoria}", methods: ["GET"])]
+    #[Route("/productos/categoria/{nomCategoria<[A-Za-zÁÉÍÓÚáéíóú\süÜ]+>}", methods: ["GET"])]
     public function getProductoByNomCategoria(string $nomCategoria, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
         $productos = $productoRepository->findByNomCategoria($nomCategoria);
@@ -91,7 +91,7 @@ class ProductoController extends AbstractController
     }
 
 
-    #[Route("/producto/eliminar/{id}", methods: ["DELETE"])]
+    #[Route("/producto/eliminar/{id<\d+>}", methods: ["DELETE"])]
     public function removeProducto(ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, int $id)
     {
         $producto = $productoRepository->findOneBy(["id" => $id]);
@@ -101,7 +101,7 @@ class ProductoController extends AbstractController
     }
 
 
-    #[Route("/producto/modificar/{id}", methods: ["PATCH", "PUT"])]
+    #[Route("/producto/modificar/{id<\d+>}", methods: ["PATCH", "PUT"])]
     public function updateProducto(int $id, ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, Request $request)
     {
         $data = json_decode($request->getContent(), true);

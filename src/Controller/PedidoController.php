@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class PedidoController extends AbstractController
 {
 
-    #[Route("/pedidos/usuario/{idUsuario}", methods: ["GET"])]
+    #[Route("/pedidos/usuario/{idUsuario<\d+>}", methods: ["GET"])]
     public function getPedidosUsuario(int $idUsuario, SerializerInterface $serializer, PedidoRepository $pedidoRepository)
     {
         $pedidos = $pedidoRepository->findByUsuario($idUsuario);
@@ -28,7 +28,7 @@ class PedidoController extends AbstractController
 
     }
 
-    #[Route("/pedido/productos/{idPedido}", methods: ["GET"])]
+    #[Route("/pedido/productos/{idPedido<\d+>}", methods: ["GET"])]
     public function getProductosPedido(int $idPedido, ProductospedidoRepository $productospedidoRepository, SerializerInterface $serializer)
     {
         $productosPedido = $productospedidoRepository->findByPedido($idPedido);
@@ -40,7 +40,7 @@ class PedidoController extends AbstractController
 
     }
 
-    #[Route("/pedido/eliminar/{id}", methods: ["DELETE"])]
+    #[Route("/pedido/eliminar/{id<\d+>}", methods: ["DELETE"])]
     public function removePedido(PedidoRepository $pedidoRepository, int $id)
     {
         $pedido = $pedidoRepository->find($id);
@@ -64,7 +64,7 @@ class PedidoController extends AbstractController
         return new JsonResponse(["status" => "Pedido " . $id . " añadido correctamente", "idPedido" => $idPedido], Response::HTTP_OK);
     }
 
-    #[Route("/productopedido/crear/{idPedido}/{idProducto}", methods: ["PUT", "PATCH"])]
+    #[Route("/productopedido/crear/{idPedido<\d+>}/{idProducto<\d+>}", methods: ["PUT", "PATCH"])]
     public function addProductoPedido(int $idPedido, int $idProducto, PedidoRepository $pedidoRepository, ProductoRepository $productoRepository, ProductospedidoRepository $productospedidoRepository, Request $request)
     {
 

@@ -64,7 +64,7 @@ class UsuarioController extends AbstractController
         $newUsuario = $usuarioRepository->add($usuario, true);
 
         $carrito = new Carrito();
-        $carrito->setUsuario($newUsuario);
+        $carrito->setUsuario($usuarioRepository->find($newUsuario));
         $carritoRepository->add($carrito, true);
 
         return new JsonResponse(["status" => "Usuario añadido correctamente"], Response::HTTP_OK);
@@ -96,6 +96,8 @@ class UsuarioController extends AbstractController
         return new JsonResponse(["status" => "Usuario" . $id . " modificado correctamente"], Response::HTTP_OK);
     }
 
+
+    #[Route("/login", methods: ["POST"])]
     public function login(Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher)
     {
         $data = json_decode($request->getContent(), true);
@@ -103,11 +105,11 @@ class UsuarioController extends AbstractController
         $usuario = $usuarioRepository->findOneBy(['correo' => $data["correo"]]);
 
         if (!$usuario) {
-            return new JsonResponse(["error" => "Error al iniciar sesión: usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(["error" => "Usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
         }
 
         if (!$passwordHasher->isPasswordValid($usuario, $data["contrasenha"])) {
-            return new JsonResponse(["error" => "Error al iniciar sesión: usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(["error" => "Usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
         }
 
         return new JsonResponse([

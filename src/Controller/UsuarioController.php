@@ -6,6 +6,7 @@ use App\Entity\Carrito;
 use App\Entity\Usuario;
 use App\Repository\CarritoRepository;
 use App\Repository\UsuarioRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +99,7 @@ class UsuarioController extends AbstractController
 
 
     #[Route("/login", methods: ["POST"])]
-    public function login(Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher)
+    public function login(Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher, JWTEncoderInterface $jWTEncoder)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -112,10 +113,18 @@ class UsuarioController extends AbstractController
             return new JsonResponse(["error" => "Usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
         }
 
+        $token = $jWTEncoder->encode([
+            "id" => $usuario->getId(),
+            "nomUsuario" => $usuario->getNomUsuario(),
+            "nombre" => $usuario->getNombre(),
+            "apellidos" => $usuario->getApellidos(),
+            "admin" => $usuario->isAdmin()
+        ]);
+
         return new JsonResponse([
             "status" => "Sesión iniciada correctamente",
-            "correo" => $usuario->getCorreo(),
-            "nombre" => $usuario->getNombre()
+            "token" => $token,
+
         ], Response::HTTP_OK);
     }
 }

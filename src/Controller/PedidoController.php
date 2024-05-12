@@ -6,6 +6,7 @@ use App\Entity\Productospedido;
 use App\Repository\PedidoRepository;
 use App\Repository\ProductoRepository;
 use App\Repository\ProductospedidoRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class PedidoController extends AbstractController
 {
 
-    #[Route("/pedidos/usuario/{idUsuario<\d+>}", methods: ["GET"])]
-    public function getPedidosUsuario(int $idUsuario, SerializerInterface $serializer, PedidoRepository $pedidoRepository)
+    #[Route("/pedidos/usuario", methods: ["GET"])]
+    public function getPedidosUsuario(Request $request, JWTEncoderInterface $jwtEncoder, SerializerInterface $serializer, PedidoRepository $pedidoRepository)
     {
-        $pedidos = $pedidoRepository->findByUsuario($idUsuario);
 
+        $token = $request->headers->get('Authorization');
+        $usuario = $jwtEncoder->decode($token);
+
+        $pedidos = $pedidoRepository->findByUsuario($usuario['id']);
         $pedidosJson = $serializer->serialize($pedidos, 'json');
         return new Response($pedidosJson, Response::HTTP_OK, [
             'Content-Type' => 'application/json'
@@ -73,7 +77,8 @@ class PedidoController extends AbstractController
         $pedido = $pedidoRepository->find($idPedido);
         $producto = $productoRepository->find($idProducto);
         $cantidad = $data["cantidad"];
-
+        $precio = $data["precio"];
+        $descuento = $data["descuento"];
         if ($producto->getStock() < $cantidad) {
             $pedidoRepository->removePedido($pedido, true);
             return new JsonResponse(["error" => "No se ha podido completar el pedido: El artículo " . $producto->getNombre() . " no está disponible"], Response::HTTP_CONFLICT);
@@ -82,6 +87,8 @@ class PedidoController extends AbstractController
         $productosPedido->setCantidad($cantidad);
         $productosPedido->setPedido($pedido);
         $productosPedido->setProducto($producto);
+        $productosPedido->setDescuento($descuento);
+        $productosPedido->setPrecio($precio);
         $productospedidoRepository->add($productosPedido, true);
 
         $producto->setStock($producto->getStock() - $cantidad);

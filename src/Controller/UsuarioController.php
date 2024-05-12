@@ -118,7 +118,8 @@ class UsuarioController extends AbstractController
             "nomUsuario" => $usuario->getNomUsuario(),
             "nombre" => $usuario->getNombre(),
             "apellidos" => $usuario->getApellidos(),
-            "admin" => $usuario->isAdmin()
+            "correo" => $usuario->getCorreo(),
+            "admin" => $usuario->isAdmin(),
         ]);
 
         return new JsonResponse([

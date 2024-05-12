@@ -36,17 +36,18 @@ class ResenhaController extends AbstractController
     }
 
 
-    #[Route("/resenha/crear/{idProducto<\d+>}", methods: ["GET"])]
-    public function addResenha(string $idProducto, ResenhaRepository $resenhaRepository, Request $request, ProductoRepository $productoRepository, UsuarioRepository $usuarioRepository)
+    #[Route("/resenha/crear/{nomProducto}", methods: ["POST"])]
+    public function addResenha(string $nomProducto, ResenhaRepository $resenhaRepository, Request $request, ProductoRepository $productoRepository, UsuarioRepository $usuarioRepository)
     {
+
         $data = json_decode($request->getContent(), true);
         $resenha = new Resenha();
         $resenha->setOpinion($data["opinion"]);
         $resenha->setValoracion($data["valoracion"]);
-        $resenha->setProducto($productoRepository->find($idProducto));
+        $resenha->setProducto($productoRepository->findByNombre($nomProducto));
         $resenha->setUsuario($usuarioRepository->find($data["idUsuario"]));
-
-        return new JsonResponse(["status" => "Reseña añadida correctamente"], Response::HTTP_OK);
+        $resenhaRepository->add($resenha, true);
+        return new JsonResponse(["status" => "Tu reseña ha sido publicada"], Response::HTTP_OK);
     }
 
 

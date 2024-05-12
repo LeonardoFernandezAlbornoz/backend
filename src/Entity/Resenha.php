@@ -29,6 +29,11 @@ class Resenha
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $fecha = null;
 
+    function __construct()
+    {
+        $this->fecha = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

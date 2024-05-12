@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductospedidoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductospedidoRepository::class)]
@@ -21,6 +22,12 @@ class Productospedido
 
     #[ORM\Column]
     private ?int $cantidad = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $precio = null;
+
+    #[ORM\Column]
+    private ?int $descuento = null;
 
     public function getProducto(): ?Producto
     {
@@ -54,6 +61,30 @@ class Productospedido
     public function setPedido(?Pedido $pedido): static
     {
         $this->pedido = $pedido;
+
+        return $this;
+    }
+
+    public function getPrecio(): ?string
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(string $precio): static
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getDescuento(): ?int
+    {
+        return $this->descuento;
+    }
+
+    public function setDescuento(int $descuento): static
+    {
+        $this->descuento = $descuento;
 
         return $this;
     }

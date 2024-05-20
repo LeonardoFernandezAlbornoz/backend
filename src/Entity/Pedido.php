@@ -24,9 +24,6 @@ class Pedido
     private ?string $estado = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $descuentos = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $gastosEnvio = null;
 
     function __construct()
@@ -72,18 +69,6 @@ class Pedido
     public function setEstado(string $estado): static
     {
         $this->estado = $estado;
-
-        return $this;
-    }
-
-    public function getDescuentos(): ?string
-    {
-        return $this->descuentos;
-    }
-
-    public function setDescuentos(string $descuentos): static
-    {
-        $this->descuentos = $descuentos;
 
         return $this;
     }

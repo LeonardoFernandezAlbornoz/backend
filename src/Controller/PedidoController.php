@@ -59,7 +59,6 @@ class PedidoController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
         $pedido = new Pedido();
-        $pedido->setDescuentos($data["descuentos"]);
         $pedido->setGastosEnvio($data["datosEnvio"]);
         $pedido->setUsuario($data["idUsuario"]);
 
@@ -78,7 +77,6 @@ class PedidoController extends AbstractController
         $producto = $productoRepository->find($idProducto);
         $cantidad = $data["cantidad"];
         $precio = $data["precio"];
-        $descuento = $data["descuento"];
         if ($producto->getStock() < $cantidad) {
             $pedidoRepository->removePedido($pedido, true);
             return new JsonResponse(["error" => "No se ha podido completar el pedido: El artículo " . $producto->getNombre() . " no está disponible"], Response::HTTP_CONFLICT);
@@ -87,7 +85,6 @@ class PedidoController extends AbstractController
         $productosPedido->setCantidad($cantidad);
         $productosPedido->setPedido($pedido);
         $productosPedido->setProducto($producto);
-        $productosPedido->setDescuento($descuento);
         $productosPedido->setPrecio($precio);
         $productospedidoRepository->add($productosPedido, true);
 

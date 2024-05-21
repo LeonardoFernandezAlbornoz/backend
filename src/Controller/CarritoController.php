@@ -64,4 +64,21 @@ class CarritoController extends AbstractController
         return new JsonResponse(["status" => "Producto añadido al carrito"], Response::HTTP_OK);
     }
 
+    #[Route("/productocarrito/eliminar/{idUsuario<\d+>}/{idProducto<\d+>}", methods: ["DELETE"])]
+    public function removeProductoPedido(int $idUsuario, int $idProducto, CarritoRepository $carritoRepository, ProductoRepository $productoRepository, ProductoscarritoRepository $productoscarritoRepository)
+    {
+        $carrito = $carritoRepository->findByUsuario($idUsuario);
+        $producto = $productoRepository->find($idProducto);
+
+        $productosCarrito = $productoscarritoRepository->find([
+            'producto' => $producto,
+            'carrito' => $carrito
+        ]);
+        ;
+
+        $productoscarritoRepository->removeProductosCarrito($productosCarrito, true);
+
+        return new JsonResponse(["status" => "Producto eliminado del carrito"], Response::HTTP_OK);
+    }
+
 }

@@ -50,7 +50,7 @@ class CarritoController extends AbstractController
 
         if ($productosCarrito) {
 
-            $productosCarrito->setCantidad($cantidad);
+            $productosCarrito->setCantidad($cantidad + $productosCarrito->getCantidad());
         } else {
 
             $productosCarrito = new Productoscarrito();

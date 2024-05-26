@@ -1,0 +1,1 @@
+mysql -u root -p basedatos < /docker-entrypoint-initdb.d/backup.sql

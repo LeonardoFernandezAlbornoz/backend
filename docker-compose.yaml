@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/symfony
+    ports:
+      - '9000:9000'
+    networks:
+      - symfony_network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'abc123'
+      MYSQL_DATABASE: 'basedatos'
+      MYSQL_USER: 'usuario'
+      MYSQL_PASSWORD: 'abc123'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - symfony_network
+
+volumes:
+  mariadb_data:
+
+networks:
+  symfony_network:
+    driver: bridge

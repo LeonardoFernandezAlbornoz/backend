@@ -17,6 +17,8 @@ class ProductoController extends AbstractController
     #[Route("/productos", methods: ["GET"])]
     public function getProductos(ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
+
+
         $productos = $productoRepository->findAll();
 
         $productosJson = $serializer->serialize($productos, 'json');

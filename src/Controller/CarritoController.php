@@ -5,6 +5,8 @@ use App\Entity\Productoscarrito;
 use App\Repository\CarritoRepository;
 use App\Repository\ProductoRepository;
 use App\Repository\ProductoscarritoRepository;
+use App\Repository\UsuarioRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +81,23 @@ class CarritoController extends AbstractController
         $productoscarritoRepository->removeProductosCarrito($productosCarrito, true);
 
         return new JsonResponse(["status" => "Producto eliminado del carrito"], Response::HTTP_OK);
+    }
+
+
+    #[Route("/carrito/eliminar/usuario", methods: ["DELETE"])]
+    public function eliminarCarritoUsuario(Request $request, CarritoRepository $carritoRepository, ProductoscarritoRepository $productoscarritoRepository, UsuarioRepository $usuarioRepository)
+    {
+
+        $data = json_decode($request->getContent(), true);
+
+        $carrito = $carritoRepository->findByUsuario($data["idUsuario"]);
+        $productos = $productoscarritoRepository->findByCarrito($carrito->getId());
+        foreach ($productos as $producto) {
+            $productoscarritoRepository->removeProductosCarrito($producto, true);
+        }
+
+        return new Response(Response::HTTP_OK);
+
     }
 
 }

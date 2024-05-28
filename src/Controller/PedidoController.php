@@ -6,6 +6,7 @@ use App\Entity\Productospedido;
 use App\Repository\PedidoRepository;
 use App\Repository\ProductoRepository;
 use App\Repository\ProductospedidoRepository;
+use App\Repository\UsuarioRepository;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +33,8 @@ class PedidoController extends AbstractController
 
     }
 
+
+
     #[Route("/pedido/productos/{idPedido<\d+>}", methods: ["GET"])]
     public function getProductosPedido(int $idPedido, ProductospedidoRepository $productospedidoRepository, SerializerInterface $serializer)
     {
@@ -53,21 +56,23 @@ class PedidoController extends AbstractController
         return new JsonResponse(["status" => "Pedido " . $id . " eliminado correctamente"], Response::HTTP_OK);
     }
 
-    #[Route("/pedido/crear", methods: ["PUT", "PATCH"])]
-    public function addPedido(PedidoRepository $pedidoRepository, int $id, Request $request)
+    #[Route("/pedido/crear", methods: ["POST"])]
+    public function addPedido(PedidoRepository $pedidoRepository, Request $request, UsuarioRepository $usuarioRepository)
     {
 
         $data = json_decode($request->getContent(), true);
         $pedido = new Pedido();
-        $pedido->setGastosEnvio($data["datosEnvio"]);
-        $pedido->setUsuario($data["idUsuario"]);
+
+        $usuario = $usuarioRepository->find($data["idUsuario"]);
+        $pedido->setGastosEnvio($data["gastosEnvio"]);
+        $pedido->setUsuario($usuario);
 
         $idPedido = $pedidoRepository->add($pedido, true);
 
-        return new JsonResponse(["status" => "Pedido " . $id . " añadido correctamente", "idPedido" => $idPedido], Response::HTTP_OK);
+        return new JsonResponse(["status" => "Pedido añadido correctamente", "idPedido" => $idPedido], Response::HTTP_OK);
     }
 
-    #[Route("/productopedido/crear/{idPedido<\d+>}/{idProducto<\d+>}", methods: ["PUT", "PATCH"])]
+    #[Route("/productopedido/crear/{idPedido<\d+>}/{idProducto<\d+>}", methods: ["POST"])]
     public function addProductoPedido(int $idPedido, int $idProducto, PedidoRepository $pedidoRepository, ProductoRepository $productoRepository, ProductospedidoRepository $productospedidoRepository, Request $request)
     {
 
@@ -77,6 +82,7 @@ class PedidoController extends AbstractController
         $producto = $productoRepository->find($idProducto);
         $cantidad = $data["cantidad"];
         $precio = $data["precio"];
+        $descuento = $data["descuento"];
         if ($producto->getStock() < $cantidad) {
             $pedidoRepository->removePedido($pedido, true);
             return new JsonResponse(["error" => "No se ha podido completar el pedido: El artículo " . $producto->getNombre() . " no está disponible"], Response::HTTP_CONFLICT);
@@ -86,6 +92,7 @@ class PedidoController extends AbstractController
         $productosPedido->setPedido($pedido);
         $productosPedido->setProducto($producto);
         $productosPedido->setPrecio($precio);
+        $productosPedido->setDescuento($descuento);
         $productospedidoRepository->add($productosPedido, true);
 
         $producto->setStock($producto->getStock() - $cantidad);

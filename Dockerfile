@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    curl
+    curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones de PHP
 RUN docker-php-ext-install pdo pdo_mysql zip intl mbstring xml
@@ -24,13 +25,12 @@ WORKDIR /var/www/symfony
 # Copiar los archivos del proyecto
 COPY . .
 
-# Instalar dependencias de Composer
+# Copiar archivos de Composer y instalar dependencias
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --ignore-platform-reqs --no-interaction
+RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist
 
 # Cambiar permisos para el almacenamiento de caché y logs
 RUN chown -R www-data:www-data /var/www/symfony/var
 
 EXPOSE 9000
-
 CMD ["php-fpm"]

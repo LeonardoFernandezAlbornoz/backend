@@ -9,8 +9,6 @@ services:
     restart: unless-stopped
     volumes:
       - .:/var/www/symfony
-    ports:
-      - '9000:9000'
     networks:
       - symfony_network
 
@@ -28,6 +26,19 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - symfony_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - .:/var/www/symfony
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
     networks:
       - symfony_network
 

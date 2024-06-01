@@ -9,6 +9,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/var/www/symfony
+      - ./certs:/certs
     networks:
       - symfony_network
 

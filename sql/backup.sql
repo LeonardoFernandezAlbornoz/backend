@@ -3,13 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-05-2024 a las 15:06:24
+-- Tiempo de generación: 02-06-2024 a las 21:41:52
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,12 +38,7 @@ CREATE TABLE `carrito` (
 
 INSERT INTO `carrito` (`id`, `usuario_id`) VALUES
 (1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7);
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -81,16 +77,6 @@ CREATE TABLE `doctrine_migration_versions` (
   `execution_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcado de datos para la tabla `doctrine_migration_versions`
---
-
-INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-('DoctrineMigrations\\Version20240403180235', '2024-04-03 20:03:59', 820),
-('DoctrineMigrations\\Version20240404233859', '2024-04-05 01:39:15', 89),
-('DoctrineMigrations\\Version20240512180137', '2024-05-12 20:01:57', 114),
-('DoctrineMigrations\\Version20240517232543', '2024-05-18 01:25:56', 81);
-
 -- --------------------------------------------------------
 
 --
@@ -110,9 +96,8 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id`, `usuario_id`, `fecha`, `estado`, `gastos_envio`) VALUES
-(1, 1, '2024-04-19 10:00:00', 'En proceso', '5.00'),
-(2, 3, '2024-04-18 15:30:00', 'Entregado', '5.00'),
-(3, 3, '2024-05-12 22:49:28', 'Pendiente', '0.00');
+(1, 1, '2024-06-02 21:01:16', 'En proceso', '5.99'),
+(2, 2, '2024-06-02 21:01:16', 'Entregado', '4.99');
 
 -- --------------------------------------------------------
 
@@ -180,15 +165,10 @@ CREATE TABLE `productoscarrito` (
 INSERT INTO `productoscarrito` (`producto_id`, `carrito_id`, `cantidad`) VALUES
 (1, 1, 1),
 (2, 1, 1),
-(3, 2, 2),
+(3, 1, 2),
 (4, 2, 1),
-(12, 3, 3),
-(14, 3, 1),
-(17, 3, 1),
-(18, 3, 1),
-(20, 3, 1),
-(23, 3, 1),
-(24, 3, 1);
+(5, 2, 2),
+(6, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -211,9 +191,10 @@ CREATE TABLE `productospedido` (
 INSERT INTO `productospedido` (`producto_id`, `pedido_id`, `cantidad`, `precio`, `descuento`) VALUES
 (1, 1, 1, '699.99', 0),
 (2, 1, 1, '899.99', 0),
-(3, 2, 2, '549.99', 10),
+(3, 1, 2, '549.99', 0),
 (4, 2, 1, '999.99', 0),
-(20, 3, 1, '20.00', 0);
+(5, 2, 2, '1099.99', 0),
+(6, 2, 1, '349.99', 0);
 
 -- --------------------------------------------------------
 
@@ -235,80 +216,56 @@ CREATE TABLE `resenha` (
 --
 
 INSERT INTO `resenha` (`id`, `usuario_id`, `producto_id`, `valoracion`, `opinion`, `fecha`) VALUES
-(1, 1, 1, '5.0', 'El portátil HP es rápido y tiene una gran pantalla.', '2024-04-20 10:00:00'),
-(2, 2, 2, '4.0', 'Buena PC para juegos, pero podría mejorar la refrigeración.', '2024-04-20 10:00:00'),
-(3, 1, 3, '4.0', 'La Galaxy Tab S7 tiene una pantalla nítida y una buena duración de la batería.', '2024-04-20 10:00:00'),
-(4, 2, 4, '4.0', 'El iPhone 13 tiene una cámara impresionante, pero es un poco caro.', '2024-04-20 10:00:00'),
-(5, 1, 5, '5.0', 'El Samsung Galaxy S22 es rápido y tiene una excelente cámara.', '2024-04-20 10:00:00'),
-(6, 2, 6, '3.0', 'El Redmi Note 11 tiene una buena relación calidad-precio, pero la batería podría ser mejor.', '2024-04-20 10:00:00'),
-(7, 1, 7, '5.0', 'La RTX 3080 ofrece un rendimiento excepcional en juegos.', '2024-04-20 10:00:00'),
-(8, 2, 8, '4.0', 'El Ryzen 9 5900X es un procesador potente para tareas de computación intensiva.', '2024-04-20 10:00:00'),
-(9, 1, 9, '4.0', 'Buena placa base para construir un PC de alta gama.', '2024-04-20 10:00:00'),
-(10, 2, 10, '5.0', 'El Sony Bravia OLED ofrece una calidad de imagen asombrosa.', '2024-04-20 10:00:00'),
-(11, 1, 11, '3.0', 'El LG NanoCell TV 8K tiene una gran resolución, pero el sistema operativo es un poco lento.', '2024-04-20 10:00:00'),
-(12, 2, 12, '4.0', 'Buena calidad de imagen en el Samsung QLED TV, pero el control remoto es un poco complicado.', '2024-04-20 10:00:00'),
-(13, 1, 13, '5.0', 'El ASUS ROG Swift es perfecto para juegos de alta velocidad.', '2024-04-20 10:00:00'),
-(14, 2, 14, '4.0', 'El Dell Ultrasharp 4K tiene colores vibrantes y una buena precisión de imagen.', '2024-04-20 10:00:00'),
-(15, 1, 15, '4.0', 'El LG UltraWide ofrece una experiencia inmersiva con su pantalla ancha.', '2024-04-20 10:00:00'),
-(16, 2, 16, '5.0', 'La Canon EOS 90D ofrece imágenes nítidas y un gran rendimiento en condiciones de poca luz.', '2024-04-20 10:00:00'),
-(17, 1, 17, '4.0', 'La Sony Alpha A7 III es fácil de usar y ofrece una calidad de imagen excepcional.', '2024-04-20 10:00:00'),
-(18, 2, 18, '3.0', 'La GoPro Hero 10 Black es resistente y fácil de usar, pero el precio es alto.', '2024-04-20 10:00:00'),
-(19, 1, 19, '4.0', 'El JBL Charge 5 tiene un sonido claro y potente, perfecto para actividades al aire libre.', '2024-04-20 10:00:00'),
-(20, 2, 20, '5.0', 'Los AirPods Pro tienen una excelente cancelación de ruido y una calidad de sonido impresionante.', '2024-04-20 10:00:00'),
-(21, 1, 21, '4.0', 'La Sonos Beam ofrece un sonido envolvente y tiene integración perfecta con los asistentes de voz.', '2024-04-20 10:00:00'),
-(22, 2, 22, '5.0', 'La PlayStation 5 ofrece una experiencia de juego inmersiva con gráficos impresionantes.', '2024-04-20 10:00:00'),
-(23, 1, 23, '4.0', 'La Xbox Series X tiene un diseño elegante y ofrece una amplia biblioteca de juegos.', '2024-04-20 10:00:00'),
-(24, 2, 24, '5.0', 'La Nintendo Switch OLED tiene una pantalla brillante y colores vibrantes, perfecta para juegos portátiles.', '2024-04-20 10:00:00'),
-(25, 1, 1, '5.0', 'El portátil HP es rápido y tiene una gran pantalla.', '2024-04-20 10:00:00'),
-(26, 2, 2, '4.0', 'Buena PC para juegos, pero podría mejorar la refrigeración.', '2024-04-20 10:00:00'),
-(27, 1, 3, '4.0', 'La Galaxy Tab S7 tiene una pantalla nítida y una buena duración de la batería.', '2024-04-20 10:00:00'),
-(28, 2, 4, '4.0', 'El iPhone 13 tiene una cámara impresionante, pero es un poco caro.', '2024-04-20 10:00:00'),
-(29, 1, 5, '5.0', 'El Samsung Galaxy S22 es rápido y tiene una excelente cámara.', '2024-04-20 10:00:00'),
-(30, 2, 6, '3.0', 'El Redmi Note 11 tiene una buena relación calidad-precio, pero la batería podría ser mejor.', '2024-04-20 10:00:00'),
-(31, 1, 7, '5.0', 'La RTX 3080 ofrece un rendimiento excepcional en juegos.', '2024-04-20 10:00:00'),
-(32, 2, 8, '4.0', 'El Ryzen 9 5900X es un procesador potente para tareas de computación intensiva.', '2024-04-20 10:00:00'),
-(33, 1, 9, '4.0', 'Buena placa base para construir un PC de alta gama.', '2024-04-20 10:00:00'),
-(34, 2, 10, '5.0', 'El Sony Bravia OLED ofrece una calidad de imagen asombrosa.', '2024-04-20 10:00:00'),
-(35, 1, 11, '3.0', 'El LG NanoCell TV 8K tiene una gran resolución, pero el sistema operativo es un poco lento.', '2024-04-20 10:00:00'),
-(36, 2, 12, '4.0', 'Buena calidad de imagen en el Samsung QLED TV, pero el control remoto es un poco complicado.', '2024-04-20 10:00:00'),
-(37, 1, 13, '5.0', 'El ASUS ROG Swift es perfecto para juegos de alta velocidad.', '2024-04-20 10:00:00'),
-(38, 2, 14, '4.0', 'El Dell Ultrasharp 4K tiene colores vibrantes y una buena precisión de imagen.', '2024-04-20 10:00:00'),
-(39, 1, 15, '4.0', 'El LG UltraWide ofrece una experiencia inmersiva con su pantalla ancha.', '2024-04-20 10:00:00'),
-(40, 2, 16, '5.0', 'La Canon EOS 90D ofrece imágenes nítidas y un gran rendimiento en condiciones de poca luz.', '2024-04-20 10:00:00'),
-(41, 1, 17, '4.0', 'La Sony Alpha A7 III es fácil de usar y ofrece una calidad de imagen excepcional.', '2024-04-20 10:00:00'),
-(42, 2, 18, '3.0', 'La GoPro Hero 10 Black es resistente y fácil de usar, pero el precio es alto.', '2024-04-20 10:00:00'),
-(43, 1, 19, '4.0', 'El JBL Charge 5 tiene un sonido claro y potente, perfecto para actividades al aire libre.', '2024-04-20 10:00:00'),
-(44, 2, 20, '5.0', 'Los AirPods Pro tienen una excelente cancelación de ruido y una calidad de sonido impresionante.', '2024-04-20 10:00:00'),
-(45, 1, 21, '4.0', 'La Sonos Beam ofrece un sonido envolvente y tiene integración perfecta con los asistentes de voz.', '2024-04-20 10:00:00'),
-(46, 2, 22, '5.0', 'La PlayStation 5 ofrece una experiencia de juego inmersiva con gráficos impresionantes.', '2024-04-20 10:00:00'),
-(47, 1, 23, '4.0', 'La Xbox Series X tiene un diseño elegante y ofrece una amplia biblioteca de juegos.', '2024-04-20 10:00:00'),
-(48, 2, 24, '5.0', 'La Nintendo Switch OLED tiene una pantalla brillante y colores vibrantes, perfecta para juegos portátiles.', '2024-04-20 10:00:00'),
-(49, 2, 2, '4.0', 'Buena PC para juegos, pero podría mejorar la refrigeración.', '2024-04-20 10:00:00'),
-(50, 1, 3, '4.0', 'La Galaxy Tab S7 tiene una pantalla nítida y una buena duración de la batería.', '2024-04-20 10:00:00'),
-(51, 2, 4, '4.0', 'El iPhone 13 tiene una cámara impresionante, pero es un poco caro.', '2024-04-20 10:00:00'),
-(52, 1, 5, '5.0', 'El Samsung Galaxy S22 es rápido y tiene una excelente cámara.', '2024-04-20 10:00:00'),
-(53, 2, 6, '3.0', 'El Redmi Note 11 tiene una buena relación calidad-precio, pero la batería podría ser mejor.', '2024-04-20 10:00:00'),
-(54, 1, 7, '5.0', 'La RTX 3080 ofrece un rendimiento excepcional en juegos.', '2024-04-20 10:00:00'),
-(55, 2, 8, '4.0', 'El Ryzen 9 5900X es un procesador potente para tareas de computación intensiva.', '2024-04-20 10:00:00'),
-(56, 1, 9, '4.0', 'Buena placa base para construir un PC de alta gama.', '2024-04-20 10:00:00'),
-(57, 2, 10, '5.0', 'El Sony Bravia OLED ofrece una calidad de imagen asombrosa.', '2024-04-20 10:00:00'),
-(58, 1, 11, '3.0', 'El LG NanoCell TV 8K tiene una gran resolución, pero el sistema operativo es un poco lento.', '2024-04-20 10:00:00'),
-(59, 2, 12, '4.0', 'Buena calidad de imagen en el Samsung QLED TV, pero el control remoto es un poco complicado.', '2024-04-20 10:00:00'),
-(60, 1, 13, '5.0', 'El ASUS ROG Swift es perfecto para juegos de alta velocidad.', '2024-04-20 10:00:00'),
-(61, 2, 14, '4.0', 'El Dell Ultrasharp 4K tiene colores vibrantes y una buena precisión de imagen.', '2024-04-20 10:00:00'),
-(62, 1, 15, '4.0', 'El LG UltraWide ofrece una experiencia inmersiva con su pantalla ancha.', '2024-04-20 10:00:00'),
-(63, 2, 16, '5.0', 'La Canon EOS 90D ofrece imágenes nítidas y un gran rendimiento en condiciones de poca luz.', '2024-04-20 10:00:00'),
-(64, 1, 17, '4.0', 'La Sony Alpha A7 III es fácil de usar y ofrece una calidad de imagen excepcional.', '2024-04-20 10:00:00'),
-(65, 2, 18, '3.0', 'La GoPro Hero 10 Black es resistente y fácil de usar, pero el precio es alto.', '2024-04-20 10:00:00'),
-(66, 3, 8, '3.0', 'DFDFSD', '2024-05-12 00:52:56'),
-(67, 3, 8, '1.0', '', '2024-05-12 00:58:45'),
-(68, 2, 6, '2.0', 'SDFSDFSD', '2024-05-12 01:13:16'),
-(69, 3, 4, '1.0', 'fsdf', '2024-05-12 01:54:01'),
-(70, 3, 4, '1.0', 'dsfsdf', '2024-05-12 01:54:46'),
-(71, 3, 8, '1.0', 'fsdfsdfs', '2024-05-12 01:56:22'),
-(72, 3, 11, '4.0', 'Me gusta esta tele', '2024-05-18 00:21:30'),
-(73, 3, 12, '4.0', 'xdfdf', '2024-05-22 00:40:24'),
-(74, 3, 14, '4.0', '', '2024-05-23 23:37:11');
+(1, 1, 1, '4.5', 'Excelente portátil, rápido y ligero.', '2024-06-02 21:29:51'),
+(2, 2, 4, '5.0', 'El iPhone 13 es espectacular, la cámara toma fotos increíbles.', '2024-06-02 21:29:51'),
+(3, 1, 1, '5.0', 'Me encanta este portátil, es rápido y tiene una gran pantalla.', '2024-06-02 21:33:50'),
+(4, 2, 1, '4.0', 'Buen rendimiento general, pero la duración de la batería podría ser mejor.', '2024-06-02 21:33:50'),
+(5, 1, 2, '4.5', 'Excelente PC para juegos, corre todos mis juegos favoritos sin problemas.', '2024-06-02 21:33:50'),
+(6, 2, 2, '5.0', 'Estoy muy impresionado con el rendimiento de este PC, lo recomiendo.', '2024-06-02 21:33:50'),
+(7, 1, 3, '4.0', 'Buena tablet en general, pero el precio es un poco alto para lo que ofrece.', '2024-06-02 21:33:50'),
+(8, 2, 3, '4.5', 'Gran pantalla y buen rendimiento, me gusta mucho esta tablet.', '2024-06-02 21:33:50'),
+(9, 1, 4, '5.0', 'El iPhone 13 es simplemente increíble, la calidad de construcción y la cámara son impresionantes.', '2024-06-02 21:33:50'),
+(10, 2, 4, '4.5', 'Gran teléfono, pero el precio es un poco elevado en comparación con otras opciones.', '2024-06-02 21:33:50'),
+(11, 1, 5, '4.5', 'Gran teléfono con una cámara excelente, el rendimiento es rápido y fluido.', '2024-06-02 21:33:50'),
+(12, 2, 5, '5.0', 'El Galaxy S22 superó mis expectativas, es genial en todos los aspectos.', '2024-06-02 21:33:50'),
+(13, 1, 6, '4.0', 'Buen teléfono por su precio, pero la duración de la batería podría ser mejor.', '2024-06-02 21:33:50'),
+(14, 2, 6, '4.5', 'Muy satisfecho con este teléfono, ofrece un buen rendimiento a un precio asequible.', '2024-06-02 21:33:50'),
+(15, 1, 7, '5.0', 'Increíble tarjeta gráfica, excelente rendimiento en juegos y aplicaciones de diseño.', '2024-06-02 21:33:50'),
+(16, 2, 7, '4.5', 'Gran tarjeta gráfica, pero el precio es un poco alto en este momento debido a la demanda.', '2024-06-02 21:33:50'),
+(17, 1, 8, '4.5', 'Excelente procesador, potente y eficiente, perfecto para gaming y multitarea.', '2024-06-02 21:33:50'),
+(18, 2, 8, '5.0', 'El Ryzen 9 5900X es simplemente increíble, el rendimiento es excepcional en todas las tareas.', '2024-06-02 21:33:50'),
+(19, 1, 9, '4.0', 'Buena placa base con muchas características, pero el precio es un poco alto.', '2024-06-02 21:33:50'),
+(20, 2, 9, '4.5', 'Excelente placa base, ofrece un rendimiento confiable y muchas opciones de personalización.', '2024-06-02 21:33:50'),
+(21, 1, 10, '5.0', 'La calidad de imagen de esta TV es impresionante, los colores son vibrantes y el contraste es excelente.', '2024-06-02 21:33:50'),
+(22, 2, 10, '4.5', 'Excelente TV, pero el precio es un poco alto en comparación con otras opciones.', '2024-06-02 21:33:50'),
+(23, 1, 11, '4.5', 'Gran TV con una calidad de imagen excepcional, el upscaling a 8K es impresionante.', '2024-06-02 21:33:50'),
+(24, 2, 11, '5.0', 'La LG NanoCell TV ofrece una experiencia visual increíble, estoy muy satisfecho con esta compra.', '2024-06-02 21:33:50'),
+(25, 1, 12, '4.0', 'Buena TV con colores vibrantes, pero el sistema operativo es un poco lento a veces.', '2024-06-02 21:33:50'),
+(26, 2, 12, '4.5', 'Muy buena TV, la calidad de imagen es excelente y el precio es razonable.', '2024-06-02 21:33:50'),
+(27, 1, 13, '5.0', 'El ASUS ROG Swift es perfecto para gaming, la tasa de refresco de 240Hz hace que los juegos sean suaves y fluidos.', '2024-06-02 21:33:50'),
+(28, 2, 13, '4.5', 'Gran monitor para gaming, pero el precio es un poco alto en comparación con otras opciones.', '2024-06-02 21:33:50'),
+(29, 1, 14, '4.5', 'Excelente monitor para trabajo y edición de fotos, la resolución 4K y el HDR hacen que las imágenes se vean increíbles.', '2024-06-02 21:33:50'),
+(30, 2, 14, '5.0', 'Muy impresionado con este monitor, la calidad de construcción y la precisión del color son excepcionales.', '2024-06-02 21:33:50'),
+(31, 1, 15, '4.0', 'Buen monitor con una pantalla amplia, pero el brillo podría ser mejor.', '2024-06-02 21:33:50'),
+(32, 2, 15, '4.5', 'Gran monitor para multitarea, el tamaño y la resolución son perfectos para mi flujo de trabajo.', '2024-06-02 21:33:50'),
+(33, 1, 16, '5.0', 'La Canon EOS 90D es una excelente cámara para fotografía y vídeo, la calidad de imagen es excepcional.', '2024-06-02 21:33:50'),
+(34, 2, 16, '4.5', 'Muy satisfecho con esta cámara, ofrece un rendimiento excelente en diversas condiciones de iluminación.', '2024-06-02 21:33:50'),
+(35, 1, 17, '4.5', 'Excelente cámara para fotografía de paisajes y retratos, el enfoque automático es rápido y preciso.', '2024-06-02 21:33:50'),
+(36, 2, 17, '5.0', 'La Sony Alpha A7 III es simplemente increíble, la calidad de imagen y la ergonomía son fantásticas.', '2024-06-02 21:33:50'),
+(37, 1, 18, '5.0', 'La GoPro Hero 10 Black es perfecta para capturar momentos emocionantes, la calidad de video es impresionante.', '2024-06-02 21:33:50'),
+(38, 2, 18, '4.5', 'Excelente cámara de acción, la estabilización de imagen es muy efectiva incluso en condiciones extremas.', '2024-06-02 21:33:50'),
+(39, 1, 19, '4.5', 'Muy buenos altavoces, el sonido es potente y los graves son profundos.', '2024-06-02 21:33:50'),
+(40, 2, 19, '5.0', 'Los JBL Charge 5 son increíbles, el sonido es claro y tienen una duración de batería impresionante.', '2024-06-02 21:33:50'),
+(41, 1, 20, '5.0', 'Los AirPods Pro son geniales, la cancelación de ruido es efectiva y la calidad de sonido es excelente.', '2024-06-02 21:33:50'),
+(42, 2, 20, '4.5', 'Excelentes auriculares, pero el precio es un poco alto en comparación con otras opciones.', '2024-06-02 21:33:50'),
+(43, 1, 21, '4.0', 'Buena calidad de sonido y fácil de configurar, pero el precio es un poco elevado.', '2024-06-02 21:33:50'),
+(44, 2, 21, '4.5', 'La Sonos Beam ofrece un sonido impresionante y se integra perfectamente con mi sistema de entretenimiento.', '2024-06-02 21:33:50'),
+(45, 1, 22, '5.0', 'La PlayStation 5 es una consola excelente, el rendimiento es increíble y los tiempos de carga son rápidos.', '2024-06-02 21:33:50'),
+(46, 2, 22, '4.5', 'Gran consola para gaming, pero la disponibilidad es un problema debido a la alta demanda.', '2024-06-02 21:33:50'),
+(47, 1, 23, '4.5', 'Excelente consola con un potente hardware, disfruto mucho jugando en la Xbox Series X.', '2024-06-02 21:33:50'),
+(48, 2, 23, '5.0', 'La Xbox Series X ofrece una experiencia de juego de próxima generación, estoy muy impresionado.', '2024-06-02 21:33:50'),
+(49, 1, 24, '4.0', 'Buena consola para juegos portátiles, la pantalla OLED es impresionante, pero el precio es un poco alto.', '2024-06-02 21:33:50'),
+(50, 2, 24, '4.5', 'La Nintendo Switch OLED ofrece una experiencia de juego mejorada, me encanta la calidad de la pantalla.', '2024-06-02 21:33:50');
 
 -- --------------------------------------------------------
 
@@ -331,13 +288,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `nom_usuario`, `nombre`, `apellidos`, `correo`, `contrasenha`, `admin`) VALUES
-(1, 'usuario1', 'Juan', 'González', 'juan@example.com', 'bba2d1bec283dd3b90add09797a9235b08069064', 0),
-(2, 'usuario2', 'María', 'López', 'maria@example.com', 'contrasenha2', 0),
-(3, 'leonarfer', 'Leonardo', 'Fernandez', 'leonarfer@hotmail.es', '$2y$13$KVYI18VPSFhLihWryVoFx.9IW23LlvPfkB9k4O9sBHCqiiHlbrJkm', 0),
-(4, 'dasdasd', 'sadasdas', 'dasdas', 'dasdasd@sffd.es', '$2y$13$LNAPleHRucD7.dBloYPpbukWMV5cnYLut/pwzx4V118PMkicZQCCS', 0),
-(5, 'sdsads', 'adasds@sfsdf', 'fsdfd', 'ssdfsd@fsd.es', '$2y$13$AGndHxO/ltE4f0vVvMa.7.mZIR1Dy3c21vyT77WAZuvIvzP1LCPFW', 0),
-(6, 'sdfsdf', 'sdfsdfd', 'dfsdf', 'leorfer@hotmail.es', '$2y$13$UEdiD7/wTdS/KflchtxbpuKyzbOnN0GRTf4aXTD8Jj78olad3xBze', 0),
-(7, 'leo', 'leonardo', 'fernández', 'leonarfer932@gmail.es', '$2y$13$rS8hdIUyFS1VGSaXr9LssuSdjISD72VoopgHgJTAjBjt5XUOEqJBS', 0);
+(1, 'Juan', 'Juan', 'Fernández', 'juan@gmail.com', 'password123', 0),
+(2, 'María', 'María', 'Pérez', 'maria@gmail.com', 'password123', 0),
+(3, 'admin', 'Admin', 'User', 'admin@gmail.com', 'adminpassword', 1);
 
 --
 -- Índices para tablas volcadas
@@ -414,7 +367,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria`
@@ -426,7 +379,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -438,13 +391,13 @@ ALTER TABLE `producto`
 -- AUTO_INCREMENT de la tabla `resenha`
 --
 ALTER TABLE `resenha`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

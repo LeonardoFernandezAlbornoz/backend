@@ -34,7 +34,7 @@ class Producto
     #[ORM\JoinColumn(name: "id_categoria", referencedColumnName: "id")]
     private ?Categoria $categoria = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT, length: 16777215)]
     private ?string $imagen = null;
 
     function __construct()

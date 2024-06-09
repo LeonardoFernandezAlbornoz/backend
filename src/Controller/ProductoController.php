@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Producto;
 use App\Repository\CategoriaRepository;
 use App\Repository\ProductoRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,9 +41,9 @@ class ProductoController extends AbstractController
 
 
     #[Route("/producto/{slug}", methods: ["GET"])]
-    public function getProducto(string $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
+    public function getProducto(int $slug, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
-        $producto = $productoRepository->findByNombre($slug);
+        $producto = $productoRepository->find($slug);
 
         $productoJson = $serializer->serialize($producto, 'json');
         return new Response($productoJson, Response::HTTP_OK, [
@@ -77,47 +78,70 @@ class ProductoController extends AbstractController
 
 
     #[Route("/producto/crear", methods: ["POST"])]
-    public function addProducto(ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, Request $request)
+    public function addProducto(ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, Request $request, JWTEncoderInterface $jwtEncoder)
     {
         $data = json_decode($request->getContent(), true);
-        $producto = new Producto();
-        $producto->setNombre($data["nombre"]);
-        $producto->setDescripcion($data["descripcion"]);
-        $producto->setPrecio($data["precio"]);
-        $producto->setStock($data["stock"]);
-        $producto->setImagen($data["imagen"]);
-        $producto->setCategoria($categoriaRepository->find($data["idCategoria"]));
-        $productoRepository->add($producto, true);
 
-        return new JsonResponse(["status" => "Producto añadido correctamente"], Response::HTTP_OK);
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
+        if ($auth && $auth["admin"]) {
+            $producto = new Producto();
+            $producto->setNombre($data["nombre"]);
+            $producto->setDescripcion($data["descripcion"]);
+            $producto->setPrecio($data["precio"]);
+            $producto->setStock($data["stock"]);
+            $producto->setImagen($data["imagen"]);
+            $producto->setDescuento($data["descuento"]);
+            $producto->setCategoria($categoriaRepository->find($data["idCategoria"]));
+            $productoRepository->add($producto, true);
+
+            return new JsonResponse(["status" => "Producto añadido correctamente"], Response::HTTP_OK);
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
 
     #[Route("/producto/eliminar/{id<\d+>}", methods: ["DELETE"])]
-    public function removeProducto(ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, int $id)
+    public function removeProducto(Request $request, ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, int $id, JWTEncoderInterface $jwtEncoder)
     {
-        $producto = $productoRepository->findOneBy(["id" => $id]);
-        $productoRepository->removeProducto($producto, true);
 
-        return new JsonResponse(["status" => "Producto " . $id . " eliminado correctamente"], Response::HTTP_OK);
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
+        if ($auth && $auth["admin"]) {
+            $producto = $productoRepository->findOneBy(["id" => $id]);
+            $productoRepository->removeProducto($producto, true);
+
+            return new JsonResponse(["status" => "Producto " . $id . " eliminado correctamente"], Response::HTTP_OK);
+
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
 
     #[Route("/producto/modificar/{id<\d+>}", methods: ["PATCH", "PUT"])]
-    public function updateProducto(int $id, ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, Request $request)
+    public function updateProducto(int $id, ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, Request $request, JWTEncoderInterface $jwtEncoder)
     {
-        $data = json_decode($request->getContent(), true);
-        $producto = $productoRepository->find($id);
-        $producto->setNombre($data["nombre"]);
-        $producto->setDescripcion($data["descripcion"]);
-        $producto->setPrecio($data["precio"]);
-        $producto->setStock($data["descuento"]);
-        $producto->setStock($data["stock"]);
-        $producto->setImagen($data["imagen"]);
-        $producto->setCategoria($categoriaRepository->find($data["idCategoria"]));
-        $productoRepository->add($producto, true);
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
+        if ($auth && $auth["admin"]) {
+            $data = json_decode($request->getContent(), true);
+            $producto = $productoRepository->find($id);
+            $producto->setNombre($data["nombre"]);
+            $producto->setDescripcion($data["descripcion"]);
+            $producto->setPrecio($data["precio"]);
+            $producto->setDescuento($data["descuento"]);
+            $producto->setStock($data["stock"]);
+            $producto->setImagen($data["imagen"]);
+            $producto->setCategoria($categoriaRepository->find($data["idCategoria"]));
+            $productoRepository->add($producto, true);
 
-        return new JsonResponse(["status" => "Producto " . $id . "  modificado correctamente"], Response::HTTP_OK);
+            return new JsonResponse(["status" => "Producto " . $id . "  modificado correctamente"], Response::HTTP_OK);
+
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
 

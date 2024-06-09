@@ -18,6 +18,26 @@ use Symfony\Component\Serializer\SerializerInterface;
 class PedidoController extends AbstractController
 {
 
+
+
+    #[Route("/pedidos", methods: ["GET"])]
+    public function getPedidos(Request $request, JWTEncoderInterface $jwtEncoder, SerializerInterface $serializer, PedidoRepository $pedidoRepository)
+    {
+
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
+        if ($auth && $auth["admin"]) {
+            $pedidos = $pedidoRepository->findAll();
+            $pedidosJson = $serializer->serialize($pedidos, 'json');
+            return new Response($pedidosJson, Response::HTTP_OK, [
+                'Content-Type' => 'application/json'
+            ]);
+
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
+
+    }
     #[Route("/pedidos/usuario", methods: ["GET"])]
     public function getPedidosUsuario(Request $request, JWTEncoderInterface $jwtEncoder, SerializerInterface $serializer, PedidoRepository $pedidoRepository)
     {
@@ -31,6 +51,23 @@ class PedidoController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
 
+    }
+
+    #[Route("/pedidos/modificar-estado/{idPedido<\d+>}", methods: ["PATCH", "PUT"])]
+    public function modificarEstado(Request $request, JWTEncoderInterface $jwtEncoder, SerializerInterface $serializer, PedidoRepository $pedidoRepository, int $idPedido)
+    {
+
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
+        $data = json_decode($request->getContent(), true);
+        if ($auth && $auth["admin"]) {
+            $pedido = $pedidoRepository->find($idPedido);
+            $pedido->setEstado($data['estado']);
+            $pedidoRepository->add($pedido, true);
+            return new JsonResponse(["status" => "Pedido modificado correctamente"], Response::HTTP_OK);
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
 

@@ -81,20 +81,27 @@ class UsuarioController extends AbstractController
     }
 
     #[Route("/usuario/modificar/{id<\d+>}", methods: ["PATCH", "PUT"])]
-    public function updateUsuario(int $id, Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher)
+    public function updateUsuario(int $id, Request $request, UsuarioRepository $usuarioRepository, UserPasswordHasherInterface $passwordHasher, JWTEncoderInterface $jwtEncoder)
     {
-        $data = json_decode($request->getContent(), true);
-        $usuario = $usuarioRepository->find($id);
-        $usuario->setNomUsuario($data["nomUsuario"]);
-        $usuario->setNombre($data["nombre"]);
-        $usuario->setApellidos($data["apellidos"]);
-        $usuario->setCorreo($data["correo"]);
-        $usuario->setAdmin($data["admin"]);
-        $contrasenhaHash = $passwordHasher->hashPassword($usuario, $data["contrasenha"]);
-        $usuario->setContrasenha($contrasenhaHash);
-        $usuarioRepository->add($usuario, true);
+        $token = $request->headers->get('Authorization');
+        $auth = $jwtEncoder->decode($token);
 
-        return new JsonResponse(["status" => "Usuario" . $id . " modificado correctamente"], Response::HTTP_OK);
+        if ($auth && $auth["admin"]) {
+            $data = json_decode($request->getContent(), true);
+            $usuario = $usuarioRepository->find($id);
+            $usuario->setNomUsuario($data["nomUsuario"]);
+            $usuario->setNombre($data["nombre"]);
+            $usuario->setApellidos($data["apellidos"]);
+            $usuario->setCorreo($data["correo"]);
+            $usuario->setAdmin($data["admin"]);
+            $usuario->setActivado($data["activado"]);
+            $usuarioRepository->add($usuario, true);
+
+            return new JsonResponse(["status" => "Usuario " . $id . " modificado correctamente"], Response::HTTP_OK);
+        } else {
+            return new JsonResponse(["status" => "No estás autorizado a realizar esta acción"], Response::HTTP_UNAUTHORIZED);
+        }
+
     }
 
 
@@ -110,6 +117,10 @@ class UsuarioController extends AbstractController
         }
 
         if (!$passwordHasher->isPasswordValid($usuario, $data["contrasenha"])) {
+            return new JsonResponse(["error" => "Usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$usuario->isActivado()) {
             return new JsonResponse(["error" => "Usuario o contraseña incorrectos"], Response::HTTP_UNAUTHORIZED);
         }
 

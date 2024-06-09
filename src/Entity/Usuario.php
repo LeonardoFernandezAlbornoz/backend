@@ -35,8 +35,14 @@ class Usuario implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column]
     private ?bool $admin = null;
 
+    #[ORM\Column]
+    private ?bool $activado = null;
 
 
+    public function __construct()
+    {
+        $this->activado = true;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -142,5 +148,17 @@ class Usuario implements PasswordAuthenticatedUserInterface, UserInterface
 
     }
 
+    public function isActivado(): ?bool
+    {
+        return $this->activado;
+    }
+
+    public function setActivado(bool $activado): static
+    {
+        $this->activado = $activado;
+
+        return $this;
+
+    }
 
 }

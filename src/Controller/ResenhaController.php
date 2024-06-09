@@ -24,10 +24,10 @@ class ResenhaController extends AbstractController
         ]);
     }
 
-    #[Route("/resenhas/{nomProducto}", methods: ["GET"])]
-    public function getResenhasNomProducto(string $nomProducto, ResenhaRepository $resenhaRepository, ProductoRepository $productoRepository, SerializerInterface $serializer)
+    #[Route("/resenhas/{idProducto<\d+>}", methods: ["GET"])]
+    public function getResenhasNomProducto(int $idProducto, ResenhaRepository $resenhaRepository, ProductoRepository $productoRepository, SerializerInterface $serializer)
     {
-        $producto = $productoRepository->findByNombre($nomProducto);
+        $producto = $productoRepository->find($idProducto);
         $resenhas = $resenhaRepository->findByProducto($producto->getId());
         $resenhasJson = $serializer->serialize($resenhas, 'json');
         return new Response($resenhasJson, Response::HTTP_OK, [
@@ -36,18 +36,18 @@ class ResenhaController extends AbstractController
     }
 
 
-    #[Route("/resenha/crear/{nomProducto}", methods: ["POST"])]
-    public function addResenha(string $nomProducto, ResenhaRepository $resenhaRepository, Request $request, ProductoRepository $productoRepository, UsuarioRepository $usuarioRepository)
+    #[Route("/resenha/crear/{idProducto<\d+>}", methods: ["POST"])]
+    public function addResenha(int $idProducto, ResenhaRepository $resenhaRepository, Request $request, ProductoRepository $productoRepository, UsuarioRepository $usuarioRepository)
     {
 
         $data = json_decode($request->getContent(), true);
         $resenha = new Resenha();
         $resenha->setOpinion($data["opinion"]);
         $resenha->setValoracion($data["valoracion"]);
-        $resenha->setProducto($productoRepository->findByNombre($nomProducto));
+        $resenha->setProducto($productoRepository->find($idProducto));
         $resenha->setUsuario($usuarioRepository->find($data["idUsuario"]));
         $resenhaRepository->add($resenha, true);
-        return new JsonResponse(["status" => "Tu reseña ha sido publicada"], Response::HTTP_OK);
+        return new JsonResponse(["status" => "Su reseña ha sido publicada"], Response::HTTP_OK);
     }
 
 

@@ -34,15 +34,15 @@ class CarritoController extends AbstractController
     #[Route("/productocarrito/crear/{idUsuario<\d+>}/{idProducto<\d+>}", methods: ["PUT", "PATCH"])]
     public function addProductoPedido(int $idUsuario, int $idProducto, CarritoRepository $carritoRepository, ProductoRepository $productoRepository, ProductoscarritoRepository $productoscarritoRepository, Request $request)
     {
-
         $data = json_decode($request->getContent(), true);
-        $productosCarrito = new Productoscarrito();
         $carrito = $carritoRepository->findByUsuario($idUsuario);
         $producto = $productoRepository->find($idProducto);
         $cantidad = intval($data["cantidad"]);
 
         if ($producto->getStock() < $cantidad) {
-            return new JsonResponse(["error" => "No se ha podido el producto al carrito: El artículo " . $producto->getNombre() . " no está disponible"], Response::HTTP_CONFLICT);
+            return new JsonResponse([
+                "error" => "No se ha podido añadir el producto al carrito: El artículo " . $producto->getNombre() . " no está disponible"
+            ], Response::HTTP_CONFLICT);
         }
 
         $productosCarrito = $productoscarritoRepository->findOneBy([
@@ -51,8 +51,15 @@ class CarritoController extends AbstractController
         ]);
 
         if ($productosCarrito) {
+            $nuevaCantidad = $productosCarrito->getCantidad() + $cantidad;
 
-            $productosCarrito->setCantidad($cantidad);
+            if ($producto->getStock() < $nuevaCantidad) {
+                return new JsonResponse([
+                    "error" => "No se ha podido añadir el producto al carrito: No hay suficiente stock del artículo " . $producto->getNombre()
+                ], Response::HTTP_CONFLICT);
+            }
+
+            $productosCarrito->setCantidad($nuevaCantidad);
         } else {
 
             $productosCarrito = new Productoscarrito();

@@ -101,39 +101,7 @@ class ProductoController extends AbstractController
         }
     }
 
-   #[Route("/productocarrito/modificar/{idUsuario<\d+>}/{idProducto<\d+>}", methods: ["PUT", "PATCH"])]
-    public function updateProductoPedido(int $idUsuario, int $idProducto, CarritoRepository $carritoRepository, ProductoRepository $productoRepository, ProductoscarritoRepository $productoscarritoRepository, Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-        $carrito = $carritoRepository->findByUsuario($idUsuario);
-        $producto = $productoRepository->find($idProducto);
-        $cantidad = intval($data["cantidad"]);
-
-        if ($producto->getStock() < $cantidad) {
-            return new JsonResponse([
-                "error" => "No se ha podido añadir el producto al carrito: El artículo " . $producto->getNombre() . " no está disponible"
-            ], Response::HTTP_CONFLICT);
-        }
-
-        $productosCarrito = $productoscarritoRepository->findOneBy([
-            'carrito' => $carrito,
-            'producto' => $producto
-        ]);
-     
-
-        if ($producto->getStock() <  $cantidad) {
-            return new JsonResponse([
-                "error" => "No se ha podido modificar el producto al carrito: No hay suficiente stock del artículo " . $producto->getNombre()
-            ], Response::HTTP_CONFLICT);
-        }
-
-        $productosCarrito->setCantidad( $cantidad);
-        
-
-        $productoscarritoRepository->add($productosCarrito, true);
-
-        return new JsonResponse(["status" => "Producto modificado"], Response::HTTP_OK);
-    }
+  
     #[Route("/producto/eliminar/{id<\d+>}", methods: ["DELETE"])]
     public function removeProducto(Request $request, ProductoRepository $productoRepository, CategoriaRepository $categoriaRepository, int $id, JWTEncoderInterface $jwtEncoder)
     {

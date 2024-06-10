@@ -456,40 +456,44 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  ADD CONSTRAINT `FK_77E6BED5DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `FK_77E6BED5DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+  
 
 --
 -- Filtros para la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  ADD CONSTRAINT `FK_C4EC16CEDB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `FK_C4EC16CEDB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
-  ADD CONSTRAINT `FK_A7BB0615CE25AE0A` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
+  ADD CONSTRAINT `FK_A7BB0615CE25AE0A` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`) ON DELETE CASCADE;
+
 
 --
 -- Filtros para la tabla `productoscarrito`
 --
 ALTER TABLE `productoscarrito`
-  ADD CONSTRAINT `FK_48F682F47645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`),
-  ADD CONSTRAINT `FK_48F682F4DE2CF6E7` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id`);
+  ADD CONSTRAINT `FK_48F682F47645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`)  ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_48F682F4DE2CF6E7` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id`)  ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `productospedido`
 --
 ALTER TABLE `productospedido`
-  ADD CONSTRAINT `FK_61D6EA684854653A` FOREIGN KEY (`pedido_id`) REFERENCES `pedido` (`id`),
-  ADD CONSTRAINT `FK_61D6EA687645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`);
+  ADD CONSTRAINT `FK_61D6EA684854653A` FOREIGN KEY (`pedido_id`) REFERENCES `pedido` (`id`)  ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_61D6EA687645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`) ON DELETE CASCADE;
+  
 
 --
 -- Filtros para la tabla `resenha`
 --
 ALTER TABLE `resenha`
-  ADD CONSTRAINT `FK_D9F04BF07645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`),
-  ADD CONSTRAINT `FK_D9F04BF0DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `FK_D9F04BF07645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`)  ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_D9F04BF0DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+  
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

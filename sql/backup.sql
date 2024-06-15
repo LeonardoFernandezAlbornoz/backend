@@ -112,12 +112,13 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id`, `usuario_id`, `fecha`, `estado`, `gastos_envio`) VALUES
-(1, 1, '2024-06-02 21:01:16', 'Enviado', '0.00'),
-(2, 2, '2024-06-02 21:01:16', 'Enviado', '0.00'),
+(1, 1, '2024-06-02 21:01:16', 'Enviado', '5.99'),
+(2, 2, '2024-06-02 21:01:16', 'Enviado', '4.99'),
 (3, 4, '2024-06-02 22:22:00', 'Pendiente', '0.00'),
 (4, 4, '2024-06-06 23:06:17', 'Pendiente', '0.00'),
 (5, 4, '2024-06-08 23:17:51', 'Pendiente', '0.00'),
-
+(6, 4, '2024-06-09 23:18:34', 'Pendiente', '0.00'),
+(7, 4, '2024-06-09 23:31:18', 'Pendiente', '0.00');
 
 -- --------------------------------------------------------
 
@@ -233,10 +234,12 @@ INSERT INTO `productospedido` (`producto_id`, `pedido_id`, `cantidad`, `precio`,
 (3, 1, 2, '549.99', 0),
 (4, 2, 1, '999.99', 0),
 (5, 2, 2, '1099.99', 0),
+(5, 6, 1, '1099.99', 20),
 (6, 2, 1, '349.99', 0),
 (6, 4, 1, '349.99', 0),
 (8, 3, 1, '549.99', 0),
 (8, 5, 1, '549.99', 0),
+(13, 7, 15, '499.99', 0),
 (20, 4, 1, '249.99', 0),
 (23, 4, 1, '499.99', 0);
 
@@ -453,44 +456,40 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  ADD CONSTRAINT `FK_77E6BED5DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
-  
+  ADD CONSTRAINT `FK_77E6BED5DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  ADD CONSTRAINT `FK_C4EC16CEDB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `FK_C4EC16CEDB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
-  ADD CONSTRAINT `FK_A7BB0615CE25AE0A` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`) ON DELETE CASCADE;
-
+  ADD CONSTRAINT `FK_A7BB0615CE25AE0A` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
 
 --
 -- Filtros para la tabla `productoscarrito`
 --
 ALTER TABLE `productoscarrito`
-  ADD CONSTRAINT `FK_48F682F47645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`)  ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_48F682F4DE2CF6E7` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id`)  ON DELETE CASCADE;
+  ADD CONSTRAINT `FK_48F682F47645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`),
+  ADD CONSTRAINT `FK_48F682F4DE2CF6E7` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id`);
 
 --
 -- Filtros para la tabla `productospedido`
 --
 ALTER TABLE `productospedido`
-  ADD CONSTRAINT `FK_61D6EA684854653A` FOREIGN KEY (`pedido_id`) REFERENCES `pedido` (`id`)  ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_61D6EA687645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`) ON DELETE CASCADE;
-  
+  ADD CONSTRAINT `FK_61D6EA684854653A` FOREIGN KEY (`pedido_id`) REFERENCES `pedido` (`id`),
+  ADD CONSTRAINT `FK_61D6EA687645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`);
 
 --
 -- Filtros para la tabla `resenha`
 --
 ALTER TABLE `resenha`
-  ADD CONSTRAINT `FK_D9F04BF07645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`)  ON DELETE CASCADE,
-  ADD CONSTRAINT `FK_D9F04BF0DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE;
-  
+  ADD CONSTRAINT `FK_D9F04BF07645698E` FOREIGN KEY (`producto_id`) REFERENCES `producto` (`id`),
+  ADD CONSTRAINT `FK_D9F04BF0DB38439E` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

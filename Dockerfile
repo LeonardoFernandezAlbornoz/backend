@@ -31,8 +31,10 @@ RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist
 
 # Cambiar permisos para el almacenamiento de caché y logs
 RUN chown -R www-data:www-data /var/www/symfony/var
+
+# Modificar configuración de PHP-FPM
 RUN sed -i 's/pm.max_children = 5/pm.max_children = 10/' /usr/local/etc/php-fpm.d/www.conf
 
-
+# Exponer el puerto 9000 y especificar el comando para iniciar PHP-FPM
 EXPOSE 9000
 CMD ["php-fpm"]
